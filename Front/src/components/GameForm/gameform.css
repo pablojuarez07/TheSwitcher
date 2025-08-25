@@ -1,0 +1,83 @@
+.match_form_container{
+    background-color: #492617ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Esto asegura que los elementos se coloquen uno debajo del otro */
+  height: 100vh; /* Asegúrate de que el contenedor ocupe toda la altura de la pantalla */
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.style_create{
+    color: #eee;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
+  text-align: center;
+}
+
+.game-input{
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.create_match_button{
+    margin-top: 10px;
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #161414;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.cells-create-container {
+    display: flex; /* Activa flexbox */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a varias líneas si es necesario */
+}
+
+.cell-create {
+    display: flex;
+    width: 150px; /* Ajusta el ancho según lo que necesites */
+    height: 150px; /* Ajusta la altura según lo que necesites */
+    margin-top: 50px; /* Espaciado entre los elementos */
+    margin-left: 50px; /* Espaciado entre los elementos */
+    box-sizing: border-box;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.yellow {
+    background-color: #f3d25cff;
+  }
+  
+  
+  .teal {
+    background-color: #61b5a4ff;
+  }
+  
+  
+  .red {
+    background-color: #df5d4fff;
+  }
+  
+  
+  .green {
+    background-color: #a7b552ff;
+  }
+

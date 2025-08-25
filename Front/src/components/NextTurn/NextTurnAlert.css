@@ -1,0 +1,35 @@
+.next-turn-alert {
+    position: fixed;
+    top: 2vh;
+    right: 11vw;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .next-turn-alert.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .alert {
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

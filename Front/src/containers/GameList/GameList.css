@@ -1,0 +1,118 @@
+.game-list-container {
+  background-color: #492617ff;
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow-y: auto; /* Asegura que el scroll esté habilitado */
+  scrollbar-width: none; /* Oculta el scrollbar en Firefox */
+  -ms-overflow-style: none; /* Oculta el scrollbar en IE y Edge */
+}
+
+.game-list-container::-webkit-scrollbar {
+  width: 0px; /* Oculta el scrollbar en Chrome, Safari y Edge */
+  background: transparent; /* Asegura que no se vea nada */
+}
+
+.style_h1 {
+  color: #eee;
+  margin-bottom: 0.3rem;
+  margin-top: 0;
+  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
+  text-align: center;
+  font-size: 8vh; /* Ajuste con rem */
+}
+
+.style_p {
+  font-size: 2rem; /* Ajuste con rem */
+}
+
+.cells-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.cell-list {
+  width: 18vw; /* Ajuste con rem */
+  height: 18vh;
+  box-sizing: border-box;
+  border-radius: 0.625rem; /* Ajuste con rem */
+  margin: 0.5rem;
+}
+
+.yellow {
+  background-color: #f3d25cff;
+}
+
+.teal {
+  background-color: #61b5a4ff;
+}
+
+.red {
+  background-color: #df5d4fff;
+}
+
+.green {
+  background-color: #a7b552ff;
+}
+
+.game-list {
+  background-color: #D2A679;
+  border-radius: 0.625rem; /* Ajuste con rem */
+  padding: 1rem;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.4) 0.5em 0.5em 0.8em;
+}
+
+.game_button {
+  background-color: #6A4E42;
+  color: white;
+  padding: 0.625rem 1.25rem; /* Ajuste con rem */
+  width: 99%;
+  border: none;
+  border-radius: 0.3125rem; /* Ajuste con rem */
+  cursor: pointer;
+  font-size: 2vw;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game_button:hover {
+  background-color: #856859;
+  transition: 0.3s;
+}
+
+.create-game-button {
+  background-color: #444;
+  color: #eee;
+  margin-bottom: 2vh;
+}
+
+.create-game-button:hover {
+  border-color: #fff;
+}
+/* Media queries para pantallas pequeñas */
+@media (max-width: 600px) {
+  .style_h1 {
+    font-size: 1.5rem;
+  }
+  
+  .cell-list {
+    width: 6rem;
+    height: 6rem;
+  }
+  
+  .game_button {
+    font-size: 0.875rem;
+  }
+}

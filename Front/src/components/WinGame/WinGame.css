@@ -1,0 +1,46 @@
+/* Mensaje de victoria centrado en la pantalla */
+.win-game-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    /*Fondoblancotranslúcido*/padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 999;
+    /*Paraasegurarqueestáencimadeljuego*/box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    /*Sombraparadarprofundidad*/:;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+*/
+
+/* Título de victoria */
+.win-game-message h2 {
+    font-size: 3rem; /* Más grande para que sea llamativo */
+    color: #28a745; /* Color verde llamativo */
+    margin-bottom: 20px;
+}
+
+/* Botón de regreso al lobby */
+.win-game-message button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.win-game-message button:hover {
+    background-color: #0056b3;
+}

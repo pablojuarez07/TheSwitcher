@@ -1,0 +1,83 @@
+.general-container{
+    background-color: #492617ff;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between; /* Asegura que el chat esté a la derecha */
+}
+
+.match-container {
+    background-image: url('../../assets/img/wood_texture.jpg') ;
+    background-size: 100vw;
+    display: flex;
+    flex-direction: column;
+    /*Organizaelcontenidoencolumna*/justify-content: center;
+    /*Centraverticalmenteelcontenido*/align-items: center;
+    /*Centrahorizontalmenteelcontenido*/width: 40vw;
+    height: auto;
+    /*Alturatotaldelaventana*/max-height: 100vh;
+    flex-grow: 1;
+    /*Ocupatodoelespaciodisponibleexceptoelreservadoparaelchat*/margin: 0.5rem 0 0.5rem 0.5rem;
+    border-radius: 10px 0 0 10px;
+    -webkit-border-radius: 10px 0 0 10px;
+    -moz-border-radius: 10px 0 0 10px;
+    -ms-border-radius: 10px 0 0 10px;
+    -o-border-radius: 10px 0 0 10px;
+}
+
+.tablero {
+    width: 35vw;
+    /*Anchodeltablero*/height: 50vh;
+    /*Alturadeltablero*/background-color: #492617ff;
+    /*Colorverdeparaeltablero*/margin: 5px;
+    /*Espacioalrededordeltablero*/display: flex;
+    justify-content: center;
+    /*Centraelcontenidodentrodeltablero*/align-items: center;
+    /*Centraelcontenidoverticalmente*/border-radius: 10px;
+    /*Bordesredondeados*/scale: 0.7;
+    /*Escaladeltablero*/
+    translate: 12vh 0;
+}
+
+.cards-container {
+    display: flex;
+    /*flex-direction: column; /* Apila verticalmente las figuras y los movimientos */
+    width: 100vw; /* Ancho del contenedor de cartas */
+    justify-content: center;
+}
+
+.fig-container {
+    background-color: #2196F3;
+    /*Colorazulparafiguras*/padding: 10px;
+    /*Espaciadointerno*/border-radius: 10px;
+    /*Bordesredondeados*/display: flex;
+    /*Usamosflexparaquelascartassealineenenfila*/justify-content: space-around;
+    /*Espacioalrededordelasfiguras*/margin: 10px;
+    /*Espacioentrefigurasymovimientos*/-webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.mov-container {
+    background-color: #FF9800; /* Color naranja para movimientos */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    display: flex; /* Usamos flex para que las cartas se alineen en fila */
+    justify-content: space-around; /* Espacio alrededor de los movimientos */
+    
+}
+
+.chat-container {
+     width: 22vw;
+     /*Anchodelcontenedordelchat*/height: auto;
+     /*Alturatotaldelchat*/background-color: #184427;;
+     /*Colorrosaparaelchat*/color: #fff;
+     margin: 0.5rem 0.5rem 0.5rem 0;
+     /*Espacioalrededordelchat*/border-radius: 15px;
+     /*Bordesredondeados*/display: flex;
+     flex-direction: column;
+     /*Apilaverticalmenteelcontenidodelchat*/justify-content: flex-start;
+     /*Alineaelcontenidoalinicio*/padding: 10px;
+     /*Espaciadointerno*/border-radius: 0 10px 10px 0;
+}

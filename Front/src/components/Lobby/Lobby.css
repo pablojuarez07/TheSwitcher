@@ -1,0 +1,125 @@
+.lobbyc-container {
+  background-color: #492617ff;
+  display: flex;
+  justify-content: center;
+  flex-direction: column; /* Esto asegura que los elementos se coloquen uno debajo del otro */
+  height: 100vh; /* Asegúrate de que el contenedor ocupe toda la altura de la pantalla */
+  width: 100vw;
+  box-sizing: border-box;
+  margin-right: 10px;
+}
+
+.cells-lobbyc-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 500px;
+}
+
+.row {
+  
+  flex-wrap: wrap;
+}
+
+.row-top-bottom {
+  display: flex; /* Activa flexbox */
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+  justify-content: flex-start;
+}
+
+.cell-lobbyc {
+  display: flex;
+  flex: 1;
+    width: 120px; 
+    height: 120px; 
+    margin-top: 50px; 
+    margin-left: 50px; 
+    box-sizing: border-box;
+  border-radius: 10px;
+  margin: 10px;
+  
+}
+
+.h2-lobbyc {
+  color: #eee;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
+  text-align: center;
+}
+
+.h3-lobbyc {
+  color: #eee;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
+  text-align: center;
+}
+
+.players-lobbyc {
+  color: #eee;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  width: 100px; 
+  height: 15px;
+  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
+  text-align: center;
+}
+
+.create_match_button {
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #161414;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cell-lobbyc-first {
+  display: flex;
+  flex: 1;
+    width: 150px; 
+    height: 150px; 
+    margin-top: 50px; 
+    margin-left: 50px; 
+    box-sizing: border-box;
+  border-radius: 10px;
+  margin: 10px;
+  padding-left: 1; /* Ajusta este valor según lo que necesites */
+}
+
+.cell-lobbyc-last {
+  display: flex;
+  flex: 1;
+    width: 150px; 
+    height: 150px; 
+    margin-top: 50px; 
+    margin-left: 50px; 
+    box-sizing: border-box;
+  border-radius: 10px;
+  margin-top: 80px;
+  margin-left: -250px; /* Ajusta este valor según lo que necesites */
+}
+
+.waiting-room {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 150px; /* Espacio interno para la sala de espera */
+  background-color: rgb(87, 10, 10); /* Fondo para la sala de espera */
+  border: 2px solid #000000; /* Borde para destacar la sala */
+  margin: 5px; /* Espacio alrededor de la sala */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+}
+
+.playerc-circle {
+  width: 10vw;
+  height: 15vh;
+  background-color: #f0f0f0;
+  border: 2px solid #ddd;
+  border-radius: 50%; /* Hace que el contenedor sea circular */
+  margin-bottom: 10px; /* Espacio entre el círculo y el nombre */
+}

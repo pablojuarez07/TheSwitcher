@@ -1,0 +1,76 @@
+.board-grid {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    width: 92vh;
+    height: 92vh;
+    padding: 1vh 1vh;
+    text-align: center;
+    margin: 25vw;
+    border-radius: 2vh;
+    box-shadow: 0px 0px 6px  2px #000000;
+
+}
+
+.win-text {
+    position: absolute;
+    scale : 3.5;
+    text-align: center;
+    z-index: 3;
+    text-shadow: 2px 2px 0px #000000;
+    font-size: 2rem;
+    color: #fefefe;
+}
+
+.board-square {
+    position: relative;
+    width: 13vh;
+    height: 13vh;
+    margin: 1vh;
+    box-shadow: 0px 0px 5px  1px #000000;
+    font-size: 14px;
+    border-radius: 2vh;
+    -webkit-border-radius: 2vh;
+    -moz-border-radius: 2vh;
+    -ms-border-radius: 2vh;
+    -o-border-radius: 2vh;
+    &:hover {
+        cursor: pointer;
+        border: 1vh solid #fefefe60;
+        width: 11vh;
+        height: 11vh;
+    }
+}
+
+.board-selected {
+    border: 1vh solid #fefefe;
+    width: 11vh;
+    height: 11vh;
+}
+
+.board-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.markable {
+  color: white; /* Cambiar el color de la "X" a blanco */
+  font-size: 9vh; /* Aumentar el tamaño de la fuente */
+  font-weight: bold; /* Hacer la "X" más gruesa */
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+}
+
+@keyframes blink {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.4); }
+}
+
+.board-highlighted {
+  /*box-shadow: 0px 0px 15px  20px #1faa03; */
+  animation: blink 1s infinite;
+}
+

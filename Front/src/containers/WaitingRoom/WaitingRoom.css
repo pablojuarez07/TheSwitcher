@@ -1,0 +1,135 @@
+
+.waiting-room-container {
+  background-color: #492617ff;
+  display: flex; /* Flex para permitir columnas a los lados */
+  justify-content: center; /* Centra el contenido */
+  align-items: flex-start; /* Alinea las columnas en la parte superior */
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.room_h2 {
+  margin-top: 10px;
+  font-size: 4vw;
+}
+
+
+.waiting-room {
+  margin-top: 10vh; /* Reducido el margen superior */
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  padding: 20px;
+  background-color: #D2A679;
+  border-radius: 10px;
+  width: 90vh;
+  height: 70vh; /* Aumentado el alto de waiting-room */
+  position: relative;
+}
+
+.players-container {
+  display: flex;
+  justify-content: center; /* Centrar los jugadores horizontalmente */
+  gap: 40px; /* Espacio entre los jugadores */
+  margin: 20px;
+}
+
+.player-box {
+  display: flex;
+  flex-direction: column; /* Para colocar el nombre debajo del círculo */
+  align-items: center; /* Alinear el círculo y nombre al centro */
+}
+
+.player-circle {
+  width: 15vh;
+  height: 15vh;
+  background-color: #f0f0f0;
+  border: 2px solid #ddd;
+  border-radius: 50%; /* Hace que el contenedor sea circular */
+  margin-bottom: 10px; /* Espacio entre el círculo y el nombre */
+}
+
+.player-name {
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+}
+
+.leave-button {
+  position: absolute; /* Posición absoluta */
+  bottom: 20px; /* Distancia desde la parte inferior */
+  right: 20px; /* Distancia desde la parte derecha */
+  margin-top: 20px;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  background-color: #c13434;
+  width: 15vw;
+  height: 10vh;
+}
+
+.leave-button:hover,
+.leave-button:active {
+  background-color: darkred;
+  outline: none;
+}
+
+.leave-button:focus {
+  background-color: darkred;
+  outline: none;
+  box-shadow: 0 0 5px #fff;
+}
+
+.yellow {
+  background-color: #f3d25cff;
+}
+
+
+.teal {
+  background-color: #61b5a4ff;
+}
+
+
+.red {
+  background-color: #df5d4fff;
+}
+
+
+.green {
+  background-color: #a7b552ff;
+}
+
+.cell-room {
+  width: 10vw;
+  height: 16vh;
+  box-sizing: border-box;
+  border-radius: 20px;
+  margin: 5px;
+}
+
+
+.left-cell {
+  top: 50%;
+  left: -80px; /* Coloca el cuadrado fuera del lado izquierdo */
+  transform: translateY(-50%);
+}
+
+.right-cell {
+  top: 50%;
+  right: -80px; /* Coloca el cuadrado fuera del lado derecho */
+  transform: translateY(-50%);
+}
+
+.left-column,
+.right-column {
+  margin-top: 15vh;
+  display: flex;
+  flex-direction: column; /* Colocar en columna */
+  justify-content: flex-start; /* Alineado al principio */
+  height: 80vh; /* Igualar la altura del contenedor de espera */
+}
