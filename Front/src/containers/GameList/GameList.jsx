@@ -5,14 +5,16 @@ import { useWebSocket, } from "../../services/websocket";
 import api from "../../services/api";
 import lockIcon from "../../assets/img/lock_icon.svg";
 import Modal from 'react-modal';
+import { useNavigate } from "react-router-dom";
 
-function GameList({ user, setMatchId, setScreen }) {
+function GameList({ user, setMatchId }) {
   const [games, setGames] = useState([]);  //lista de partidas
   const [error, setError] = useState(null); // Estado para manejar errores
   const [createGame, setCreateGame] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const ws = useWebSocket();
+  const navigate = useNavigate();
 
   const fetchGames = async (dataws) => {
     try {
@@ -48,7 +50,7 @@ function GameList({ user, setMatchId, setScreen }) {
   }, []);
 
   const handleCreateGame = () => {
-    setScreen("form-game");
+    navigate("/form-game");
   }
 
   const modalStyles = {
@@ -115,7 +117,6 @@ function GameList({ user, setMatchId, setScreen }) {
                 game_id={game.id}
                 user_id={user.id}
                 setMatchId={setMatchId}
-                setScreen={setScreen}
                 isPrivate={game.isPrivate}
                 modalIsOpen={modalIsOpen}
                 setIsOpen={setIsOpen}
@@ -145,9 +146,9 @@ function GameList({ user, setMatchId, setScreen }) {
 }
 
 
-function Game_Button({ name, connected_players, max_players, game_id, user_id, setMatchId, setScreen, isPrivate, modalIsOpen, setIsOpen, password, setPassword }) {
+function Game_Button({ name, connected_players, max_players, game_id, user_id, setMatchId, isPrivate, modalIsOpen, setIsOpen, password, setPassword }) {
   const [showPriv, setShowPriv] = useState("");
-
+  const navigate = useNavigate();
 
   const handleJoinGame = async () => {
     try {
@@ -171,7 +172,7 @@ function Game_Button({ name, connected_players, max_players, game_id, user_id, s
       console.log(`Partida ${game_id} actualizada, usuario ${user_id} unido`);
 
       setMatchId(game_id);
-      setScreen("waiting-room");
+      navigate(`/waiting/${game_id}`);
 
     } catch (error) {
       console.error(`Error al unirse a la partida ${game_id}:`, error);

@@ -1,11 +1,12 @@
 import { useEffect, useCallback, useState } from "react";
 import api from "../../services/api";
 import { useWebSocket, } from "../../services/websocket";
+import { useNavigate } from "react-router-dom";
 
-function Homepage({ setUser, setScreen }) {
+function Homepage({ setUser }) {
   const [inputUsername, setInputUsername] = useState("");
   const ws = useWebSocket();
-
+  const navigate = useNavigate();
 
   const sendUsername = useCallback(() => {
     api.postData("players/", { "username": inputUsername }).then((data) => {
@@ -16,9 +17,9 @@ function Homepage({ setUser, setScreen }) {
       ws.connect(data.player_id);
       ws.send("player-join", { "player_id": data.player_id });
 
-      setScreen("game-list");
+      navigate("/games");
     });
-  }, [inputUsername, setUser, setScreen]); 
+  }, [inputUsername, setUser]); 
 
   useEffect(() => {
     const inputElement = document.getElementById("inputUsername");
