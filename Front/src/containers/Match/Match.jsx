@@ -15,14 +15,16 @@ import ForbiddenColor from "../../components/ForbiddenColor/ForbiddenColor";
 import Chat from "../../components/Chat/Chat";
 import {DownFig} from "../../components/FigDock/DownFig";
 import {UpFig} from "../../components/FigDock/UpFig";
+import { useParams } from "react-router-dom";
 
 /*** SERVICES ***/
 import { useWebSocket } from "../../services/websocket";
 import api from "../../services/api";
 import { useWindowSize } from "@react-hook/window-size";
 
-function Match({ setScreen, matchId, user_id}) {
+function Match({ user_id }) {
   const ws = useWebSocket();
+  const { matchId } = useParams();
 
   const [movimientos, setMovimientos] = useState([]); // tipo
   const [movsId, setMovsId] = useState([]);           // id
@@ -267,7 +269,7 @@ function Match({ setScreen, matchId, user_id}) {
 
           <ForbiddenColor color={prohibitedColor} />
 
-          <WinGame setScreen={setScreen} />
+          <WinGame />
           <div className="tablero">
 
             <Board board={tablero} setBoard={setTablero} matchId={matchId}
@@ -298,7 +300,7 @@ function Match({ setScreen, matchId, user_id}) {
                 zIndex: 2,
               }}
             >
-              <LeaveButton player_id={user_id} setScreen={setScreen} />
+              <LeaveButton player_id={user_id} />
               <Chat player_id={user_id}/>
 
           </div>

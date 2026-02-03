@@ -2,24 +2,28 @@ import { useState, useEffect } from 'react';
 import './WaitingRoom.css';
 import api from "../../services/api.js";
 import { useWebSocket } from "../../services/websocket.js";
+import { useNavigate, useParams } from "react-router-dom";
 
-function WaitingRoom({ matchId, user_id, setScreen, isHost, players, setPlayers }) {
+function WaitingRoom({ user_id, players, setPlayers }) {
     console.log(players, setPlayers);
     const [matchName, setMatchName] = useState(null);
-    let host = null;
+    const [host, setHost] = useState(null);
+    const [isHost, setIsHost] = useState(false);
     const ws = useWebSocket();
-    const colors = ['#f3d25cff', '#61b5a4ff', '#df5d4fff', '#a7b552ff'];
+    const navigate = useNavigate();
+    const { matchId } = useParams();
 
-    const fetchPlayers = async (dataWs) => {
+    const fetchPlayers = async () => {
 
         try {
             const data = await api.fetchData(`matches/${matchId}`);
             console.log("Datos de jugadores:", data); // Verifica la respuesta
             setPlayers(data.players);
             setMatchName(data.match_name);
-            host = data.host;
+            setHost(data.host);
+            setIsHost(data.host === user_id);
             if (data.has_begun) {
-                setScreen('match');
+                navigate(`/match/${matchId}`);
             }
         } catch (error) {
             console.error("Error fetching players:", error);
@@ -34,7 +38,7 @@ function WaitingRoom({ matchId, user_id, setScreen, isHost, players, setPlayers 
             const payload = {}; // Puedes agregar un payload si es necesario
             await api.putData(`matches/${matchId}/start`, payload);
             console.log(`El anfitrión ${user_id} ha iniciado la partida ${matchId}`);
-            setScreen('match'); // Cambia la pantalla a la partida
+            navigate(`/match/${matchId}`);
         } catch (error) {
             console.error("Error al iniciar la partida:", error);
             alert("Wait a minute, there's no one here")
@@ -45,7 +49,7 @@ function WaitingRoom({ matchId, user_id, setScreen, isHost, players, setPlayers 
         // Notificar a todos los jugadores que el anfitrión se fue y cerrar la sala
         if(player_id !== user_id){
             alert("El anfitrión ha abandonado la partida.");
-            setScreen("game-list"); // Redirigir a la lista de partidas
+            navigate("/games");
         }
     };
 
@@ -61,7 +65,7 @@ function WaitingRoom({ matchId, user_id, setScreen, isHost, players, setPlayers 
                 handleHostLeft(dataWs.player_id);
             } else {
                 // Si no es el host, actualizar la lista de jugadores
-                fetchPlayers(dataWs);
+                fetchPlayers();
             }
         });
 
@@ -80,7 +84,7 @@ function WaitingRoom({ matchId, user_id, setScreen, isHost, players, setPlayers 
             const payload = {};
             await api.putData(`players/${user_id}/UnassignMatch`, payload);
             console.log(`Jugador ${user_id} ha abandonado la partida ${matchId}`);
-            setScreen("game-list");
+            navigate("/games");
         } catch (error) {
             console.error("Error al abandonar la partida:", error);
         }
