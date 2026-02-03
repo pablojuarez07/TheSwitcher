@@ -130,6 +130,17 @@ npm run dev
 ```
 Frontend: http://localhost:8080
 
+### Ejecutar Test Unitarios
+Backend:
+```
+cd Back/
+python -m pytest
+```
+Frontend:
+```
+cd Front/
+npx vitest run
+```
 ### Variables de entorno (Frontend)
 
 Crear un archivo .env:
