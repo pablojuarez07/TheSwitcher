@@ -1,84 +1,92 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
-import Homepage from './Homepage';
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
+import Homepage from "./Homepage";
+import api from "../../services/api";
 
-import api from '../../services/api';
-import { useWebSocket } from '../../services/websocket';
+import "@testing-library/jest-dom";
 
-import '@testing-library/jest-dom';
+/* ---------------- MOCKS ---------------- */
 
-// Mockear el servicio WebSocket
-vi.mock('../../../services/websocket', () => ({
+// Mock WebSocket (RUTA CORRECTA)
+const connectMock = vi.fn();
+const sendMock = vi.fn();
+
+vi.mock("../../services/websocket", () => ({
   useWebSocket: () => ({
-    connect: vi.fn(),
+    connect: connectMock,
+    send: sendMock,
     on: vi.fn(),
-    send: vi.fn(),
-
     off: vi.fn(),
-
   }),
 }));
 
-// Mockear el API
+// Mock API
+vi.mock("../../services/api", () => ({
+  default: {
+    postData: vi.fn(),
+  },
+}));
 
-vi.mock('../../services/api', () => {
+/* ------------- HELPER RENDER ------------ */
 
-  return {
-    default: { fetchData: vi.fn(), postData: vi.fn() },
-    api: vi.fn(),
-  };
-});
-
-describe('Homepage', () => {
+const renderHomepage = () => {
   const setUserMock = vi.fn();
-  const setScreenMock = vi.fn();
-  const mockData = { username: 'TestUser', player_id: 1 };
 
-  beforeEach(() => {
-    render(<Homepage setUser={setUserMock} setScreen={setScreenMock} />);
-  });
+  render(
+    <MemoryRouter>
+      <Homepage setUser={setUserMock} />
+    </MemoryRouter>
+  );
 
+  return { setUserMock };
+};
+
+/* ---------------- TESTS ---------------- */
+
+describe("Homepage", () => {
   afterEach(() => {
-    vi.clearAllMocks(); // Limpia los mocks después de cada prueba
+    vi.clearAllMocks();
   });
 
-  it('renders input and button', () => {
-    expect(screen.getByPlaceholderText('Username')).toBeInTheDocument();
-
-    expect(screen.getByText('Play!')).toBeInTheDocument();
-
+  it("renders input and button", () => {
+    renderHomepage();
+    expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
+    expect(screen.getByText("Play!")).toBeInTheDocument();
   });
 
-  it('updates input value', () => {
-    const input = screen.getByPlaceholderText('Username');
-    fireEvent.change(input, { target: { value: 'TestUser' } });
-    expect(input.value).toBe('TestUser');
+  it("updates input value", () => {
+    renderHomepage();
+    const input = screen.getByPlaceholderText("Username");
+    fireEvent.change(input, { target: { value: "TestUser" } });
+    expect(input.value).toBe("TestUser");
   });
 
-  it('calls sendUsername on form submit', async () => {
-    const input = screen.getByPlaceholderText('Username');
-    fireEvent.change(input, { target: { value: 'TestUser' } });
+  it("sends username, connects WS and navigates", async () => {
+    const { setUserMock } = renderHomepage();
 
-    // Mockear la respuesta del API
     api.postData.mockResolvedValueOnce({
-      username: 'TestUser',
+      username: "TestUser",
       player_id: 1,
     });
 
+    const input = screen.getByPlaceholderText("Username");
+    fireEvent.change(input, { target: { value: "TestUser" } });
+    fireEvent.click(screen.getByText("Play!"));
 
-    fireEvent.click(screen.getByText('Play!'));
-
-    // Esperar a que las expectativas se resuelvan
     await waitFor(() => {
-      expect(api.postData).toHaveBeenCalledWith('players/', { username: 'TestUser' });
-      expect(setUserMock).toHaveBeenCalledWith({ id: 1, name: 'TestUser' });
-      
+      expect(api.postData).toHaveBeenCalledWith("players/", {
+        username: "TestUser",
+      });
+
+      expect(setUserMock).toHaveBeenCalledWith({
+        id: 1,
+        name: "TestUser",
+      });
+
+      expect(connectMock).toHaveBeenCalledWith(1);
+      expect(sendMock).toHaveBeenCalledWith("player-join", { player_id: 1 });
     });
-    
-
-
   });
-
-  
 });

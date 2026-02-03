@@ -13,20 +13,19 @@ describe('CreateGameForm', () => {
     expect(button).toBeInTheDocument();
   });
 
-  test('should call onGameCreated with the game name when button is clicked', () => {
+  test('should call onGameCreated with game name and password when button is clicked', () => {
     const onGameCreatedMock = vi.fn();
     render(<CreateGameForm onGameCreated={onGameCreatedMock} />);
 
-    const input = screen.getByPlaceholderText('Nombre de la partida');
+    const nameInput = screen.getByPlaceholderText('Nombre de la partida');
+    const passwordInput = screen.getByPlaceholderText('Contraseña');
     const button = screen.getByRole('button', { name: /crear partida/i });
 
-    // Simulamos la entrada del usuario
-    fireEvent.change(input, { target: { value: 'Mi Nueva Partida' } });
-    
-    // Simulamos el clic en el botón
+    fireEvent.change(nameInput, { target: { value: 'Mi Nueva Partida' } });
+    fireEvent.change(passwordInput, { target: { value: '1234' } });
+
     fireEvent.click(button);
 
-    // Verificamos que la función fue llamada con el valor correcto
-    expect(onGameCreatedMock).toHaveBeenCalledWith('Mi Nueva Partida');
+    expect(onGameCreatedMock).toHaveBeenCalledWith('Mi Nueva Partida', '1234');
   });
 });

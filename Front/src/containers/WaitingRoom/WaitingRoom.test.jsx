@@ -1,126 +1,167 @@
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import WaitingRoom from "./WaitingRoom";
+import { vi } from "vitest";
+import api from "../../services/api";
+import "@testing-library/jest-dom";
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import WaitingRoom from './WaitingRoom';
-import { vi } from 'vitest';
-import api from '../../services/api';
-import { useWebSocket } from '../../services/websocket';
-import '@testing-library/jest-dom';
+/* ---------------- MOCKS ---------------- */
 
-// Mockear el WebSocket y el API
-vi.mock('../../services/websocket');
-vi.mock('../../services/api');
+const onMock = vi.fn();
+const offMock = vi.fn();
 
-describe('WaitingRoom Component', () => {
-  const mockSetPlayers = vi.fn();
-  const mockSetScreen = vi.fn();
-  const mockMatchId = 'test-match-id';
-  const mockUserId = 'test-user-id';
-  
-  const players = [
-    { username: 'Player1' },
-    { username: 'Player2' },
-  ];
+vi.mock("../../services/websocket", () => ({
+  useWebSocket: () => ({
+    on: onMock,
+    off: offMock,
+    connect: vi.fn(),
+    send: vi.fn(),
+  }),
+}));
+
+vi.mock("../../services/api", () => ({
+  default: {
+    fetchData: vi.fn(),
+    putData: vi.fn(),
+  },
+}));
+
+/* ------------ HELPER RENDER ------------ */
+
+const renderWaitingRoom = ({ user_id, players, setPlayers }) => {
+  render(
+    <MemoryRouter initialEntries={["/waiting/123"]}>
+      <Routes>
+        <Route
+          path="/waiting/:matchId"
+          element={
+            <WaitingRoom
+              user_id={user_id}
+              players={players}
+              setPlayers={setPlayers}
+            />
+          }
+        />
+      </Routes>
+    </MemoryRouter>
+  );
+};
+
+/* ---------------- TESTS ---------------- */
+
+describe("WaitingRoom Component", () => {
+  const setPlayersMock = vi.fn();
 
   beforeEach(() => {
-    // Resetear mocks antes de cada test
     vi.clearAllMocks();
+  });
 
-    // Mock del API para fetchPlayers
-    api.fetchData.mockResolvedValue({
-      players,
-      match_name: 'Test Match',
+  test("renders players and match name", async () => {
+    const playersFromApi = [
+      { username: "Player1" },
+      { username: "Player2" },
+    ];
+
+    api.fetchData.mockResolvedValueOnce({
+      players: playersFromApi,
+      match_name: "Test Match",
+      host: 1,
       has_begun: false,
     });
 
-    // Mockear el WebSocket
-    useWebSocket.mockReturnValue({
-      connect: vi.fn(),
-      on: vi.fn(),
-      send: vi.fn(),
+    // Estado local SOLO para este test
+    let currentPlayers = [];
 
-      off: vi.fn(),
-    });
-  });
+    const setPlayersState = (newPlayers) => {
+      currentPlayers = newPlayers;
+      rerenderWaitingRoom();
+    };
 
-  it('should render the WaitingRoom component with players', async () => {
-    render(
-      <WaitingRoom
-        matchId={mockMatchId}
-        user_id={mockUserId}
-        setScreen={mockSetScreen}
-        isHost={false}
-        players={players}
-        setPlayers={mockSetPlayers}
-      />
+    const { rerender } = render(
+      <MemoryRouter initialEntries={["/waiting/123"]}>
+        <Routes>
+          <Route
+            path="/waiting/:matchId"
+            element={
+              <WaitingRoom
+                user_id={2}
+                players={currentPlayers}
+                setPlayers={setPlayersState}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>
     );
 
-    // Verificar que se llamaron las funciones del WebSocket
-    expect(useWebSocket().on).toHaveBeenCalledWith('player-joined-game', expect.any(Function));
-    expect(useWebSocket().on).toHaveBeenCalledWith('player-left-game', expect.any(Function));
+    const rerenderWaitingRoom = () =>
+      rerender(
+        <MemoryRouter initialEntries={["/waiting/123"]}>
+          <Routes>
+            <Route
+              path="/waiting/:matchId"
+              element={
+                <WaitingRoom
+                  user_id={2}
+                  players={currentPlayers}
+                  setPlayers={setPlayersState}
+                />
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      );
 
-    // Esperar a que el nombre de la partida aparezca en la pantalla
-    await waitFor(() => {
-      expect(screen.getByText('Test Match')).toBeInTheDocument();
-    });
-
-    // Verificar que los jugadores se renderizan correctamente
-    players.forEach(player => {
-      expect(screen.getByText(player.username)).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Test Match")).toBeInTheDocument();
+    expect(await screen.findByText("Player1")).toBeInTheDocument();
+    expect(await screen.findByText("Player2")).toBeInTheDocument();
   });
 
-  it('should start the game when the host clicks "Start Game"', async () => {
-    render(
-      <WaitingRoom
-        matchId={mockMatchId}
-        user_id={mockUserId}
-        setScreen={mockSetScreen}
-        isHost={true}
-        players={players}
-        setPlayers={mockSetPlayers}
-      />
-    );
+  test("host can start game", async () => {
+    api.fetchData.mockResolvedValueOnce({
+      players: [],
+      match_name: "Test Match",
+      host: 1,
+      has_begun: false,
+    });
 
-    // Mock para la función de iniciar partida
     api.putData.mockResolvedValueOnce({});
 
-    const startButton = screen.getByText('Start Game');
+    renderWaitingRoom({
+      user_id: 1, // ES HOST
+      players: [],
+      setPlayers: setPlayersMock,
+    });
+
+    const startButton = await screen.findByText("Start Game");
     fireEvent.click(startButton);
 
-    // Verificar que la función API fue llamada correctamente
-    expect(api.putData).toHaveBeenCalledWith(`matches/${mockMatchId}/start`, {});
-
-    // Verificar que se cambia la pantalla a 'match'
     await waitFor(() => {
-      expect(mockSetScreen).toHaveBeenCalledWith('match');
+      expect(api.putData).toHaveBeenCalledWith("matches/123/start", {});
     });
   });
 
-  it('should allow a player to leave the game', async () => {
-    render(
-      <WaitingRoom
-        matchId={mockMatchId}
-        user_id={mockUserId}
-        setScreen={mockSetScreen}
-        isHost={false}
-        players={players}
-        setPlayers={mockSetPlayers}
-      />
-    );
+  test("player can leave game", async () => {
+    api.fetchData.mockResolvedValueOnce({
+      players: [],
+      match_name: "Test Match",
+      host: 99,
+      has_begun: false,
+    });
 
-    // Mock para la función de abandonar partida
     api.putData.mockResolvedValueOnce({});
 
-    const leaveButton = screen.getByText('Leave Game');
+    renderWaitingRoom({
+      user_id: 2,
+      players: [],
+      setPlayers: setPlayersMock,
+    });
+
+    const leaveButton = await screen.findByText("Leave Game");
     fireEvent.click(leaveButton);
 
-    // Verificar que la función API fue llamada correctamente
-    expect(api.putData).toHaveBeenCalledWith(`players/${mockUserId}/UnassignMatch`, {});
-
-    // Verificar que se cambia la pantalla a 'game-list'
     await waitFor(() => {
-      expect(mockSetScreen).toHaveBeenCalledWith('game-list');
+      expect(api.putData).toHaveBeenCalledWith("players/2/UnassignMatch", {});
     });
   });
 });
-
