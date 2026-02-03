@@ -1,59 +1,87 @@
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import api from "../../services/api";
+import GameList from "./GameList";
+import { vi } from "vitest";
+import "@testing-library/jest-dom";
 
-import { render, screen, fireEvent } from '@testing-library/react';
-import api from '../../services/api'; // Mockear la API
-import { useWebSocket } from '../../services/websocket'; // Mockear el WebSocket
-import GameList from './GameList';
-import { vi } from 'vitest';
-import '@testing-library/jest-dom';
+/* ---------------- MOCKS ---------------- */
 
-vi.mock('../../services/websocket', () => ({
+const onMock = vi.fn();
+const offMock = vi.fn();
+
+vi.mock("../../services/websocket", () => ({
   useWebSocket: () => ({
+    on: onMock,
+    off: offMock,
     connect: vi.fn(),
-    on: vi.fn(),
     send: vi.fn(),
-    off : vi.fn(),
   }),
 }));
 
-// Mockear el API
-vi.mock('../../services/api', () => {
-  return {
-    default: { fetchData: vi.fn(), postData: vi.fn() },
-    api: vi.fn(),
-  };
-});
+vi.mock("../../services/api", () => ({
+  default: {
+    fetchData: vi.fn(),
+    putData: vi.fn(),
+  },
+}));
 
-describe('GameList Component', () => {
+/* ------------ HELPER RENDER ------------ */
 
-  const user = { username: "user", id: 1 }; // Crea un mock del usuario
+const renderGameList = (props) => {
+  render(
+    <MemoryRouter>
+      <GameList {...props} />
+    </MemoryRouter>
+  );
+};
+
+/* ---------------- TESTS ---------------- */
+
+describe("GameList Component", () => {
+  const user = { id: 1, username: "user" };
   const setMatchId = vi.fn();
-  const setScreen = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-   test('displays game list when games are available', async () => {
+  test("displays game list when games are available", async () => {
     api.fetchData.mockResolvedValueOnce({
       matches: [
-        { id: 1, match_name: 'Game 1', player_count: 2, max_players: 4, has_begun: false },
-        { id: 2, match_name: 'Game 2', player_count: 3, max_players: 4, has_begun: false },
+        {
+          id: 1,
+          match_name: "Game 1",
+          player_count: 2,
+          max_players: 4,
+          has_begun: false,
+          isPrivate: false,
+        },
+        {
+          id: 2,
+          match_name: "Game 2",
+          player_count: 3,
+          max_players: 4,
+          has_begun: false,
+          isPrivate: false,
+        },
       ],
     });
 
-    render(<GameList user={user} setMatchId={setMatchId} setScreen={setScreen} />);
+    renderGameList({ user, setMatchId });
 
-    expect(await screen.findByText('Partidas')).toBeInTheDocument();
-    expect(await screen.findByText('Game 1 - 2/4 players')).toBeInTheDocument();
-    expect(await screen.findByText('Game 2 - 3/4 players')).toBeInTheDocument();
+    expect(await screen.findByText("Partidas")).toBeInTheDocument();
+    expect(await screen.findByText("Game 1 - 2/4 players")).toBeInTheDocument();
+    expect(await screen.findByText("Game 2 - 3/4 players")).toBeInTheDocument();
   });
 
-  test('displays message when no games are available', async () => {
-    api.fetchData.mockResolvedValueOnce({ matches: [] }); // Simula que no hay partidas
+  test("displays message when no games are available", async () => {
+    api.fetchData.mockResolvedValueOnce({ matches: [] });
 
-    render(<GameList user={user} setMatchId={setMatchId} setScreen={setScreen} />);
+    renderGameList({ user, setMatchId });
 
-    expect(await screen.findByText('No hay partidas disponibles')).toBeInTheDocument();
+    expect(
+      await screen.findByText("No hay partidas disponibles")
+    ).toBeInTheDocument();
   });
-
 });
