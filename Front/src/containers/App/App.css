@@ -105,3 +105,18 @@ input {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
 }
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3); /* color base */
+  border-top: 3px solid white; /* color de la parte que gira */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto; /* centrar dentro del botón */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

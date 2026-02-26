@@ -7,10 +7,13 @@ function Homepage({ setUser }) {
   const [inputUsername, setInputUsername] = useState("");
   const ws = useWebSocket();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const sendUsername = useCallback(() => {
-    api.postData("players/", { "username": inputUsername }).then((data) => {
+    api.postData("players/", { "username": inputUsername })
+    .then((data) => {
       console.log(data);
+      setLoading(true);
       setUser({ "name": data.username, "id": data.player_id });
 
       // Conectar al WebSocket
@@ -18,6 +21,12 @@ function Homepage({ setUser }) {
       ws.send("player-join", { "player_id": data.player_id });
 
       navigate("/games");
+    }).catch ((error) => {
+      console.error("Error creating player:", error);
+      alert("Error al conectar con el servidor.")
+      setLoading(false);
+    }).finally(() => {
+      setLoading(false);
     });
   }, [inputUsername, setUser]); 
 
@@ -64,9 +73,10 @@ function Homepage({ setUser }) {
                 onChange={(e) => setInputUsername(e.target.value)} 
                 placeholder="Username"
                 autoFocus
+                disabled={loading}
               />
-              <button type="submit" className="button-play">
-                Play!
+              <button type="submit" className="button-play" disabled={loading}>
+                {loading ? <div className="spinner"></div> : "Play!"}
               </button>
             </form>
           </div>
