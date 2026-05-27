@@ -10,10 +10,10 @@ function Homepage({ setUser }) {
   const [loading, setLoading] = useState(false);
 
   const sendUsername = useCallback(() => {
+    setLoading(true);
     api.postData("players/", { "username": inputUsername })
     .then((data) => {
       console.log(data);
-      setLoading(true);
       setUser({ "name": data.username, "id": data.player_id });
 
       // Conectar al WebSocket
@@ -48,21 +48,22 @@ function Homepage({ setUser }) {
   return (
     <div className="container brown">
       <div className="grid">
-        <div className="cell yellow"></div>
-        <div className="cell teal"></div>
-        <div className="cell red"></div>
-        <div className="cell yellow"></div>
-        <div className="cell red"></div>
-        <div className="cell teal"></div>
-        <div className="cell yellow"></div>
-        <div className="cell green"></div>
-        <div className="cell green"></div>
-        <div className="cell yellow"></div>
-        <div className="cell main-cell yellow">
+        <div className="cell yellow float-slow wave-1"></div>
+        <div className="cell teal float-medium wave-2"></div>
+        <div className="cell red float-fast wave-3"></div>
+        <div className="cell yellow float-slow wave-4"></div>
+        <div className="cell red float-medium wave-5"></div>
+        <div className="cell teal float-fast wave-6"></div>
+        <div className="cell yellow float-slow wave-7"></div>
+        <div className="cell green float-medium wave-8"></div>
+        <div className="cell green float-fast wave-1"></div>
+        <div className="cell yellow float-slow wave-2"></div>
+        <div className="cell main-cell yellow wave-3">
           <h1>
+            THE
             SWITCHER
             <br />
-            APP
+            GAME
           </h1>
           <div className="input-area">
             <form onSubmit={handleSubmit}>
@@ -81,20 +82,20 @@ function Homepage({ setUser }) {
             </form>
           </div>
         </div>
-        <div className="cell red"></div>
-        <div className="cell yellow"></div>
-        <div className="cell red"></div>
-        <div className="cell green"></div>
-        <div className="cell yellow"></div>
-        <div className="cell red"></div>
-        <div className="cell teal"></div>
-        <div className="cell green"></div>
-        <div className="cell teal"></div>
-        <div className="cell red"></div>
-        <div className="cell green"></div>
-        <div className="cell teal"></div>
-        <div className="cell red"></div>
-        <div className="cell yellow"></div>
+        <div className="cell red float-slow wave-7"></div>
+        <div className="cell yellow float-medium wave-8"></div>
+        <div className="cell red float-fast wave-1"></div>
+        <div className="cell green float-slow wave-2"></div>
+        <div className="cell yellow float-medium wave-7"></div>
+        <div className="cell red float-fast wave-8"></div>
+        <div className="cell teal float-slow wave-1"></div>
+        <div className="cell green float-medium wave-2"></div>
+        <div className="cell teal float-fast wave-3"></div>
+        <div className="cell red float-slow wave-4"></div>
+        <div className="cell green float-medium wave-5"></div>
+        <div className="cell teal float-fast wave-6"></div>
+        <div className="cell yellow float-slow wave-7"></div>
+        <div className="cell green float-medium wave-8"></div>
       </div>
     </div>
   );

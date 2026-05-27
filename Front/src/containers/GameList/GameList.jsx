@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 function GameList({ user, setMatchId }) {
   const [games, setGames] = useState([]);  //lista de partidas
   const [error, setError] = useState(null); // Estado para manejar errores
-  const [createGame, setCreateGame] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
+  const [selectedGame, setSelectedGame] = useState(null);
   const ws = useWebSocket();
   const navigate = useNavigate();
 
@@ -67,24 +67,43 @@ function GameList({ user, setMatchId }) {
 
   Modal.defaultStyles.overlay.backgroundColor = "#00000088";
 
-  /*
-  if (createGame) {
-    console.log(user)
-    return <AppLobby user={user}/>
-  } */
+  const handlePrivateJoin = async () => {
+    try {
+
+      const updatePayload = {
+        game_id: selectedGame.game_id,
+        player_id: selectedGame.user_id,
+        password: password,
+      };
+
+      await api.putData(
+        `players/${selectedGame.user_id}/AssignToMatch/${selectedGame.game_id}`,
+        updatePayload
+      );
+
+      setMatchId(selectedGame.game_id);
+
+      setIsOpen(false);
+
+      navigate(`/waiting/${selectedGame.game_id}`);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
       <div className="game-list-container">
         <div className="cells-list-container">
-          <div className="cell-list red"></div>
-          <div className="cell-list red"></div>
-          <div className="cell-list green"></div>
-          <div className="cell-list yellow"></div>
-          <div className="cell-list teal"></div>
-          <div className="cell-list yellow"></div>
-          <div className="cell-list red"></div>
-          <div className="cell-list teal"></div>
+          <div className="cell-list red wave-1"></div>
+          <div className="cell-list red wave-2"></div>
+          <div className="cell-list green wave-3"></div>
+          <div className="cell-list yellow wave-4"></div>
+          <div className="cell-list teal wave-5"></div>
+          <div className="cell-list yellow wave-6"></div>
+          <div className="cell-list red wave-7"></div>
+          <div className="cell-list teal wave-8"></div>
         </div>
 
         <h2 className="style_h1">Partidas</h2>
@@ -102,8 +121,10 @@ function GameList({ user, setMatchId }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button onClick={() => { setIsOpen(false); }}
-            style={{marginLeft: "10px", backgroundColor: "#5cb85c", color: "#fff"}} >Enviar</button>
+          <button onClick={() => { handlePrivateJoin(); }}
+            style={{marginLeft: "10px", backgroundColor: "#5cb85c", color: "#fff"}} >
+              Enviar
+          </button>
         </Modal>
 
         <div className="game-list">
@@ -122,6 +143,7 @@ function GameList({ user, setMatchId }) {
                 setIsOpen={setIsOpen}
                 password={password}
                 setPassword={setPassword}
+                setSelectedGame={setSelectedGame}
               />
             ))
           ) : (
@@ -130,14 +152,14 @@ function GameList({ user, setMatchId }) {
         </div>
 
         <div className="cells-list-container">
-          <div className="cell-list green"></div>
-          <div className="cell-list teal"></div>
-          <div className="cell-list yellow"></div>
-          <div className="cell-list teal"></div>
-          <div className="cell-list teal"></div>
-          <div className="cell-list red"></div>
-          <div className="cell-list red"></div>
-          <div className="cell-list yellow"></div>
+          <div className="cell-list green wave-1"></div>
+          <div className="cell-list teal wave-2"></div>
+          <div className="cell-list yellow wave-3"></div>
+          <div className="cell-list teal wave-4"></div>
+          <div className="cell-list teal wave-5"></div>
+          <div className="cell-list red wave-6"></div>
+          <div className="cell-list red wave-7"></div>
+          <div className="cell-list yellow wave-8"></div>
         </div>
       </div>
 
@@ -146,36 +168,43 @@ function GameList({ user, setMatchId }) {
 }
 
 
-function Game_Button({ name, connected_players, max_players, game_id, user_id, setMatchId, isPrivate, modalIsOpen, setIsOpen, password, setPassword }) {
+function Game_Button({ 
+  name, connected_players, max_players, game_id, user_id, 
+  setMatchId, isPrivate, modalIsOpen, setIsOpen, password, setPassword,
+  setSelectedGame
+ }) {
   const [showPriv, setShowPriv] = useState("");
   const navigate = useNavigate();
 
   const handleJoinGame = async () => {
-    try {
-      if (isPrivate) {
-        setIsOpen(true);
-        //const passInput = prompt(`Inserte la contraseña de la partida ${name}:`);
-        //setPassword(passInput);
-      }
 
-      // Crear el payload solo con player_id y game_id
+    if (isPrivate) {
+      setSelectedGame({
+        game_id,
+        user_id
+      });
+
+      setIsOpen(true);
+      return;
+    }
+
+    try {
       const updatePayload = {
-        game_id: game_id, // Usa el ID de la partida
-        player_id: user_id, // Asegúrate de tener el ID del jugador
-        "password": password,
+        game_id,
+        player_id: user_id,
+        password: "",
       };
 
-      // Hacer el PUT para unirse a la partida
-      const response = await api.putData(`players/${user_id}/AssignToMatch/${game_id}`, updatePayload);
-
-      // La respuesta será un objeto vacío si fue un 204
-      console.log(`Partida ${game_id} actualizada, usuario ${user_id} unido`);
+      await api.putData(
+        `players/${user_id}/AssignToMatch/${game_id}`,
+        updatePayload
+      );
 
       setMatchId(game_id);
       navigate(`/waiting/${game_id}`);
 
     } catch (error) {
-      console.error(`Error al unirse a la partida ${game_id}:`, error);
+      console.error(error);
     }
   };
 
@@ -187,7 +216,21 @@ function Game_Button({ name, connected_players, max_players, game_id, user_id, s
 
   return (
     <button className="game_button" onClick={handleJoinGame}>
-      {showPriv} {name} - {connected_players}/{max_players} players {showPriv}
+
+      <div className="game_left">
+        {isPrivate && (
+          <img src={lockIcon} className="lock-icon" />
+        )}
+
+        <span className="game_name">
+          {name}
+        </span>
+      </div>
+
+      <div className="game_right">
+        {connected_players}/{max_players}
+      </div>
+
     </button>
   );
 }

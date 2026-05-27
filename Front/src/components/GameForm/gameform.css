@@ -1,5 +1,10 @@
 .match_form_container{
-    background-color: #492617ff;
+  background:
+    radial-gradient(circle at top,
+      #693b29,
+      #3b1d12
+    );
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,75 +14,125 @@
   box-sizing: border-box;
 }
 
-.style_create{
-    color: #eee;
-  margin-bottom: 50px;
-  margin-top: 10px;
-  text-shadow: rgba(0, 0, 0, 0.3) 0.2em 0.2em 0.2em;
-  text-align: center;
+.form-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 40px 50px;
+  border-radius: 32px;
+
+  background: rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.35);
+
+  z-index: 2;
 }
 
-.game-input{
-  margin-bottom: 10px;
-  margin-left: 10px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-}
-
-.create_match_button{
-    margin-top: 10px;
-  margin-left: 10px;
-  padding: 10px 20px;
-  background-color: #161414;
+.style_create {
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -4px;
+  line-height: 0.9;
   color: white;
+  text-shadow:
+    0 10px 30px rgba(0,0,0,0.4);
+}
+
+.game-input,
+.game-input-password {
+  width: 260px;
+  background: rgba(40,40,40,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 12px;
+
+  transition:
+    border 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.game-input:focus,
+.game-input-password:focus {
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow:
+    0 0 20px rgba(255,255,255,0.1);
+
+  transform: scale(1.02);
+}
+
+.create_match_button {
+  margin-top: 10px;
+  padding: 14px 28px;
+  border-radius: 14px;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #2f4d0f,
+      #1f3308
+    );
+
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.25);
+}
+
+.create_match_button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 16px 28px rgba(0,0,0,0.3);
 }
 
 .cells-create-container {
-    display: flex; /* Activa flexbox */
-    flex-wrap: wrap; /* Permite que los elementos se ajusten a varias líneas si es necesario */
+  display: flex; /* Activa flexbox */
+  flex-wrap: wrap; /* Permite que los elementos se ajusten a varias líneas si es necesario */
+  gap: 20px; /* Espacio entre los elementos */
+  margin-top: 30px; /* Espacio superior */
 }
 
 .cell-create {
-    display: flex;
-    width: 150px; /* Ajusta el ancho según lo que necesites */
-    height: 150px; /* Ajusta la altura según lo que necesites */
-    margin-top: 50px; /* Espaciado entre los elementos */
-    margin-left: 50px; /* Espaciado entre los elementos */
-    box-sizing: border-box;
-  border-radius: 10px;
-  margin: 10px;
+  width: 150px;
+  height: 150px;
+
+  border-radius: 24px;
+
+  animation: wave 4s ease-in-out infinite;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.25),
+    inset 0 1px 1px rgba(255,255,255,0.15);
+
+  transition: 0.3s ease;
 }
 
-.yellow {
-    background-color: #f3d25cff;
-  }
-  
-  
-  .teal {
-    background-color: #61b5a4ff;
-  }
-  
-  
-  .red {
-    background-color: #df5d4fff;
-  }
-  
-  
-  .green {
-    background-color: #a7b552ff;
-  }
+.cell-create:hover {
+  transform: translateY(-6px) scale(1.03);
+
+  filter: brightness(1.05);
+}
+
 
