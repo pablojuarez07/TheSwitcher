@@ -33,3 +33,7 @@ app.include_router(WebsocketRouter)
 @app.get("/")
 async def root():
     return {"message": "The switcher"}
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
