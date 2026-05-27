@@ -5,19 +5,18 @@ import { useWebSocket } from "../../services/websocket.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 function WaitingRoom({ user_id, players, setPlayers }) {
-    console.log(players, setPlayers);
     const [matchName, setMatchName] = useState(null);
     const [host, setHost] = useState(null);
     const [isHost, setIsHost] = useState(false);
     const ws = useWebSocket();
     const navigate = useNavigate();
     const { matchId } = useParams();
+    const [mouseY, setMouseY ] = useState(0);
 
     const fetchPlayers = async () => {
 
         try {
             const data = await api.fetchData(`matches/${matchId}`);
-            console.log("Datos de jugadores:", data); // Verifica la respuesta
             setPlayers(data.players);
             setMatchName(data.match_name);
             setHost(data.host);
@@ -26,7 +25,6 @@ function WaitingRoom({ user_id, players, setPlayers }) {
                 navigate(`/match/${matchId}`);
             }
         } catch (error) {
-            console.error("Error fetching players:", error);
             setPlayers([]);
             setMatchName('error');
         }
@@ -37,7 +35,6 @@ function WaitingRoom({ user_id, players, setPlayers }) {
         try {
             const payload = {}; // Puedes agregar un payload si es necesario
             await api.putData(`matches/${matchId}/start`, payload);
-            console.log(`El anfitrión ${user_id} ha iniciado la partida ${matchId}`);
             navigate(`/match/${matchId}`);
         } catch (error) {
             console.error("Error al iniciar la partida:", error);
@@ -53,15 +50,20 @@ function WaitingRoom({ user_id, players, setPlayers }) {
         }
     };
 
+    const isActive = (squareY) => {
+        return Math.abs(mouseY - squareY) < 80;
+    };
+
     useEffect(() => {
         fetchPlayers();
 
         ws.on("player-joined-game", fetchPlayers);
 
         ws.on("player-left-game", (dataWs) => {
-
+            console.log("HostWs: ", dataWs, "Host: ", host);
             if (dataWs.player_id === host) {
                 // El host se ha ido, todos deben ser expulsados
+                console.log("afitrión se ha ido, expulsando a todos los jugadores: ", dataWs);
                 handleHostLeft(dataWs.player_id);
             } else {
                 // Si no es el host, actualizar la lista de jugadores
@@ -76,14 +78,41 @@ function WaitingRoom({ user_id, players, setPlayers }) {
             ws.off("player-left-game");
             ws.off("start-game");
         };
+    }, [players]);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            setMouseY(e.clientY);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+        };
     }, []);
+
+    const getOffset = (squareY) => {
+        const distance = Math.abs(mouseY - squareY);
+
+        // distancia máxima donde todavía hay efecto
+        const maxDistance = 200;
+
+        // si está muy lejos no se mueve
+        if (distance > maxDistance) return 0;
+
+        // valor entre 0 y 1
+        const intensity = 1 - distance / maxDistance;
+
+        // movimiento máximo
+        return intensity * 45;
+    };
 
     // Función para abandonar la partida
     const handleLeave = async () => {
         try {
             const payload = {};
             await api.putData(`players/${user_id}/UnassignMatch`, payload);
-            console.log(`Jugador ${user_id} ha abandonado la partida ${matchId}`);
             navigate("/games");
         } catch (error) {
             console.error("Error al abandonar la partida:", error);
@@ -94,11 +123,11 @@ function WaitingRoom({ user_id, players, setPlayers }) {
         <>
             <div className="waiting-room-container">
                 <div className="left-column">
-                    <div className="cell-room left-cell red"></div>
-                    <div className="cell-room left-cell green"></div>
-                    <div className="cell-room left-cell yellow"></div>
-                    <div className="cell-room left-cell teal"></div>
-                    <div className="cell-room left-cell red"></div>
+                    <div className='cell-room red' style={{ transform: `translateX(${-getOffset(100)}px)` }}></div>
+                    <div className='cell-room green' style={{ transform: `translateX(${-getOffset(200)}px)` }}></div>
+                    <div className='cell-room yellow' style={{ transform: `translateX(${-getOffset(300)}px)` }}></div>
+                    <div className='cell-room teal' style={{ transform: `translateX(${-getOffset(400)}px)` }}></div>
+                    <div className='cell-room red' style={{ transform: `translateX(${-getOffset(500)}px)` }}></div>
                 </div>
 
                 <div className="waiting-room">
@@ -121,11 +150,11 @@ function WaitingRoom({ user_id, players, setPlayers }) {
                 </div>
 
                 <div className="right-column">
-                    <div className="cell-room right-cell yellow"></div>
-                    <div className="cell-room right-cell red"></div>
-                    <div className="cell-room right-cell teal"></div>
-                    <div className="cell-room right-cell green"></div>
-                    <div className="cell-room right-cell yellow"></div>
+                    <div className='cell-room yellow' style={{ transform: `translateX(${getOffset(100)}px)` }}></div>
+                    <div className='cell-room red' style={{ transform: `translateX(${getOffset(200)}px)` }}></div>
+                    <div className='cell-room teal' style={{ transform: `translateX(${getOffset(300)}px)` }}></div>
+                    <div className='cell-room green' style={{ transform: `translateX(${getOffset(400)}px)` }}></div>
+                    <div className='cell-room yellow' style={{ transform: `translateX(${getOffset(500)}px)` }}></div>
                 </div>
             </div>
         </>

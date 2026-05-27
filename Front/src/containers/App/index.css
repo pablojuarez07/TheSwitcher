@@ -28,6 +28,15 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden; /* Evita el scroll horizontal */
+  overflow-y: auto; /* Asegura que el scroll esté habilitado */
+  scrollbar-width: none; /* Oculta el scrollbar en Firefox */
+  -ms-overflow-style: none; /* Oculta el scrollbar en IE y Edge */
+}
+
+body::-webkit-scrollbar {
+  width: 0px; /* Oculta el scrollbar en Chrome, Safari y Edge */
+  background: transparent; /* Asegura que no se vea nada */
 }
 
 button {
